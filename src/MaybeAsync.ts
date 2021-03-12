@@ -38,7 +38,7 @@ export interface MaybeAsync<T> extends PromiseLike<Maybe<T>> {
   /** Runs an effect if `this` is `Nothing`, returns `this` to make chaining other methods possible */
   ifNothing(effect: () => any): MaybeAsync<T>
   /** Returns the default value if `this` is `Nothing`, otherwise it returns a Promise that will resolve to the value inside `this` */
-  orDefault(defaultValue: T): Promise<T>
+  orDefault<U>(defaultValue: U): Promise<T | U>
   /** Maps the future value of `this` with another future `Maybe` function */
   ap<U>(maybeF: PromiseLike<Maybe<(value: T) => U>>): MaybeAsync<U>
   /** Returns the first `Just` between the future value of `this` and another future `Maybe` or future `Nothing` if both `this` and the argument are `Nothing` */
@@ -91,7 +91,7 @@ class MaybeAsyncImpl<T> implements MaybeAsync<T> {
     private runPromise: (helpers: MaybeAsyncHelpers) => PromiseLike<T>
   ) {}
 
-  orDefault(defaultValue: T): Promise<T> {
+  orDefault<U>(defaultValue: U): Promise<T | U> {
     return this.run().then((x) => x.orDefault(defaultValue))
   }
 
