@@ -41,9 +41,9 @@ export interface Maybe<T> {
   /** Structural pattern matching for `Maybe` in the form of a function */
   caseOf<U>(patterns: MaybePatterns<T, U>): U
   /** Returns the default value if `this` is `Nothing`, otherwise it return the value inside `this` */
-  orDefault(defaultValue: T): T
+  orDefault<U>(defaultValue: U): T | U
   /** Lazy version of `orDefault`. Takes a function that returns the default value, that function will be called only if `this` is `Nothing` */
-  orDefaultLazy(getDefaultValue: () => T): T
+  orDefaultLazy<U>(getDefaultValue: () => U): T | U
   /** Returns empty list if the `Maybe` is `Nothing` or a list where the only element is the value of `Just` */
   toList(): T[]
   /** Maps over `this` and returns the resulting value or returns the default value if `this` is `Nothing` */
@@ -250,11 +250,11 @@ class Just<T> implements Maybe<T> {
     return '_' in patterns ? patterns._() : patterns.Just(this.__value)
   }
 
-  orDefault(_: T) {
+  orDefault<U>(_: U) {
     return this.__value
   }
 
-  orDefaultLazy(_: () => T): T {
+  orDefaultLazy<U>(_: () => U): T {
     return this.__value
   }
 
